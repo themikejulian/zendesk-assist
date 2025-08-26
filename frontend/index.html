@@ -18,3 +18,12 @@
     </div>
   </body>
 </html>
+
+<script>
+async function ping() {
+  const res = await fetch('/api/health');
+  const json = await res.json();
+  alert(JSON.stringify(json));
+}
+document.querySelector('button').onclick = ping;
+</script>
