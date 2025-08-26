@@ -2,28 +2,59 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Zendesk Assist – Hello</title>
+    <title>Zendesk Assist</title>
     <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 40px; }
-      .card { border: 1px solid #ddd; border-radius: 12px; padding: 20px; max-width: 640px; }
+      body { font-family: system-ui, sans-serif; margin: 40px; }
+      .card { border: 1px solid #ddd; border-radius: 12px; padding: 20px; max-width: 720px; }
       button { padding: 10px 14px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; }
+      textarea { width: 100%; min-height: 180px; margin-top: 12px; border-radius: 8px; padding: 12px; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      input, textarea { border: 1px solid #ddd; }
     </style>
   </head>
   <body>
     <h1>Zendesk Assist</h1>
     <div class="card">
-      <p>If you can see this page, Firebase Hosting is working.</p>
-      <button onclick="alert('Generate will go here later')">Generate</button>
+      <p>Enter some sample ticket context and click Generate.</p>
+      <div class="row">
+        <input id="subject" placeholder="Ticket subject" />
+        <input id="email" placeholder="Requester email (optional)" />
+      </div>
+      <textarea id="body" placeholder="Ticket body/description"></textarea>
+      <button id="btn">Generate</button>
+      <textarea id="output" placeholder="AI suggestion will appear here..." readonly></textarea>
+      <div id="status"></div>
     </div>
+
+    <script>
+      const btn = document.getElementById('btn');
+      const subject = document.getElementById('subject');
+      const bodyEl = document.getElementById('body');
+      const out = document.getElementById('output');
+      const status = document.getElementById('status');
+
+      btn.onclick = async () => {
+        out.value = "";
+        status.textContent = "Generating...";
+        try {
+          const res = await fetch('/api/suggest-response', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ticket: {
+                subject: subject.value || "(empty)",
+                body: bodyEl.value || ""
+              }
+            })
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          out.value = json.suggestion || "(no suggestion)";
+          status.textContent = "Done.";
+        } catch (e) {
+          status.textContent = "Error: " + e.message;
+        }
+      };
+    </script>
   </body>
 </html>
-
-<script>
-async function ping() {
-  const res = await fetch('/api/health');
-  const json = await res.json();
-  alert(JSON.stringify(json));
-}
-document.querySelector('button').onclick = ping;
-</script>
