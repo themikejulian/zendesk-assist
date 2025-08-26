@@ -1,10 +1,15 @@
 {
   "hosting": {
     "public": "frontend",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "zd-assist-api",
+          "region": "us-central1"
+        }
+      }
     ]
   }
 }
