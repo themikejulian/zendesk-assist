@@ -38,9 +38,8 @@
         status.textContent = "Generating...";
         try {
           const res = await fetch('https://oktopost.app.n8n.cloud/webhook/suggest-response', {
-    headers: { 'Content-Type': 'application/json', 'X-API-Key': '{N8N_API_KEY}' },
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': '{N8N_API_KEY}' },
             body: JSON.stringify({
               ticket: {
                 subject: subject.value || "(empty)",
