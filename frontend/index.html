@@ -37,7 +37,7 @@
         out.value = "";
         status.textContent = "Generating...";
         try {
-          const res = await fetch('/api/suggest-response', {
+          const res = await fetch('https://oktopost.app.n8n.cloud/webhook/suggest-response', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
